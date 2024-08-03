@@ -254,6 +254,13 @@ impl<'a, W: Word> WritableDmaRingBuffer<'a, W> {
         dma.reset_complete_count();
     }
 
+    /// Skip ahead from the current position in the ringbuffer.
+    pub fn seek(&mut self, dma: &mut impl DmaCtrl, offset: usize) -> usize {
+        let pos = self.pos(dma);
+        self.end = (pos + offset) % self.cap();
+        self.end
+    }
+
     /// The capacity of the ringbuffer
     pub const fn cap(&self) -> usize {
         self.dma_buf.len()

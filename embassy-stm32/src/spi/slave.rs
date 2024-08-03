@@ -370,6 +370,11 @@ where
         }
     }
 
+    /// Seek the buffer to a specific offset from the current position.
+    pub fn seek(&mut self, offset: usize) -> usize {
+        self.tx_ring_buffer.seek(offset)
+    }
+
     /// Read elements from the receive ringbuffer into `buf`. Elements received over SPI are
     /// written into the receive ringbuffer in the background using DMA.
     ///

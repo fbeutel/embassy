@@ -909,6 +909,11 @@ impl<'a, W: Word> WritableRingBuffer<'a, W> {
         self.ringbuf.write(&mut DmaCtrlImpl(self.channel.reborrow()), buf)
     }
 
+    /// Seek the buffer to a specific offset from the current position.
+    pub fn seek(&mut self, offset: usize) -> usize {
+        self.ringbuf.seek(&mut DmaCtrlImpl(self.channel.reborrow()), offset)
+    }
+
     /// Write an exact number of elements to the ringbuffer.
     pub async fn write_exact(&mut self, buffer: &[W]) -> Result<usize, OverrunError> {
         self.ringbuf
