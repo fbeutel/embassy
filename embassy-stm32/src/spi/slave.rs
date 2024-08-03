@@ -213,6 +213,11 @@ impl<'d, T: Instance> SpiSlave<'d, T> {
         }
     }
 
+    /// Set the GPIO speed for the MISO pin.
+    pub fn set_miso_speed(&mut self, speed: crate::gpio::Speed) {
+        self.miso.as_ref().map(|x| x.set_speed(speed));
+    }
+
     fn set_word_size(&mut self, word_size: word_impl::Config) {
         if self.current_word_size == word_size {
             return;
