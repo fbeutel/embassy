@@ -133,6 +133,16 @@ impl<'d, T: Instance, Tx, Rx> Spi<'d, T, Tx, Rx> {
         )
     }
 
+    /// Set the GPIO speed for the MOSI pin.
+    pub fn set_mosi_speed(&mut self, speed: crate::gpio::Speed) {
+        self.mosi.as_ref().map(|x| x.set_speed(speed));
+    }
+
+    /// Set the GPIO speed for the MOSI pin.
+    pub fn set_sck_speed(&mut self, speed: crate::gpio::Speed) {
+        self.sck.as_ref().map(|x| x.set_speed(speed));
+    }
+
     /// Create a new SPI driver, in RX-only mode (only MISO pin, no MOSI).
     pub fn new_rxonly(
         peri: impl Peripheral<P = T> + 'd,
