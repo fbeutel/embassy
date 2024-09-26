@@ -27,6 +27,8 @@ pub struct Config {
     pub mode: Mode,
     /// Bit order.
     pub bit_order: BitOrder,
+    /// Pull configuration for the MOSI pin.
+    pub mosi_pull: crate::gpio::Pull,
 }
 
 impl Default for Config {
@@ -34,6 +36,7 @@ impl Default for Config {
         Self {
             mode: MODE_0,
             bit_order: BitOrder::MsbFirst,
+            mosi_pull: crate::gpio::Pull::None,
         }
     }
 }
@@ -101,7 +104,7 @@ impl<'d, T: Instance> SpiSlave<'d, T> {
 
         sck.set_as_af(sck.af_num(), AFType::Input);
         sck.set_speed(crate::gpio::Speed::VeryHigh);
-        mosi.set_as_af(mosi.af_num(), AFType::Input);
+        mosi.set_as_af_pull(mosi.af_num(), AFType::Input, config.mosi_pull);
         mosi.set_speed(crate::gpio::Speed::VeryHigh);
         miso.set_as_af(miso.af_num(), AFType::OutputPushPull);
         miso.set_speed(crate::gpio::Speed::VeryHigh);
