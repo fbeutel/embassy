@@ -245,10 +245,19 @@ impl<'d, M: PeriMode> Spi<'d, M> {
 
         #[cfg(any(spi_v1, spi_f1, spi_v2))]
         self.info.regs.cr1().modify(|w| {
+            w.set_spe(false);
             w.set_cpha(cpha);
             w.set_cpol(cpol);
             w.set_br(br);
             w.set_lsbfirst(lsbfirst);
+        });
+
+        // After applying a cpha or cpol change, we disable and re-enable the SPI peripheral
+        // because otherwise the SPI peripheral behaves weirdly for software-managed CS pins.
+        // See https://github.com/embassy-rs/embassy/issues/3524 for a discussion.
+        #[cfg(any(spi_v1, spi_f1, spi_v2))]
+        self.info.regs.cr1().modify(|w| {
+            w.set_spe(true);
         });
 
         #[cfg(any(spi_v3, spi_v4, spi_v5))]
